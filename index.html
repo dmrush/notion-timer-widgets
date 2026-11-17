@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Notion Timer Widgets – Visual Countdown &amp; Pomodoro Embeds (No Login)</title>
+  <meta name="description" content="Copy 1-click free Notion countdown timer and visual Pomodoro clock widgets. Matches Notion dark mode and light mode with zero login or paywalls." />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: rgba(255, 255, 255, 0.12);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #10b981;
+      --link: #38bdf8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      font-weight: 800;
+      margin: 0 0 12px;
+      letter-spacing: -0.03em;
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin: 44px 0 16px;
+    }
+    p.lead {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 680px;
+      margin: 0 auto 32px;
+    }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .card h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+    .url-box {
+      font-family: monospace;
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      word-break: break-all;
+      color: #e2e8f0;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 13.5px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    .btn:hover { opacity: 0.92; text-decoration: none; }
+    .resource-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .resource-table th, .resource-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .resource-table th {
+      background: rgba(255, 255, 255, 0.04);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div style="text-align: center;">
+      <span class="badge">100% Free &bull; No Login &bull; Dark &amp; Light Mode</span>
+      <h1>Free Notion &amp; Obsidian Timer Widgets</h1>
+      <p class="lead">
+        Copy any URL below, type <code>/embed</code> inside Notion, and paste. Powered by the drift-free engine at
+        <a href="https://timerbox.net">TimerBox</a>.
+      </p>
+    </div>
+
+    <!-- 1-Click Notion Embed Presets -->
+    <h2>1-Click Copy Notion <code>/embed</code> URLs</h2>
+    <div class="grid">
+      <div class="card">
+        <div>
+          <h3>🍅 25-Minute Pomodoro Visual Disc (Dark)</h3>
+          <p style="font-size: 13px; color: var(--muted); margin: 6px 0 12px;">
+            Shrinking emerald disc clock for study &amp; deep work dashboards.
+          </p>
+          <div class="url-box" id="u1">https://timerbox.net/embed?m=25&amp;mode=disc&amp;color=10b981&amp;theme=dark</div>
+        </div>
+        <button class="btn" onclick="copyUrl('u1', this)">Copy Notion Embed Link</button>
+      </div>
+
+      <div class="card">
+        <div>
+          <h3>⚡ 10-Minute Focus Sprint (Digital Dark)</h3>
+          <p style="font-size: 13px; color: var(--muted); margin: 6px 0 12px;">
+            High-contrast digital digits for quick writing or reading sprints.
+          </p>
+          <div class="url-box" id="u2">https://timerbox.net/embed?m=10&amp;mode=digital&amp;color=38bdf8&amp;theme=dark</div>
+        </div>
+        <button class="btn" onclick="copyUrl('u2', this)">Copy Notion Embed Link</button>
+      </div>
+
+      <div class="card">
+        <div>
+          <h3>🧠 15-Minute ADHD Visual Clock (Crimson)</h3>
+          <p style="font-size: 13px; color: var(--muted); margin: 6px 0 12px;">
+            Classic red Time-Timer style wedge to combat time blindness.
+          </p>
+          <div class="url-box" id="u3">https://timerbox.net/embed?m=15&amp;mode=disc&amp;color=ef4444&amp;theme=dark</div>
+        </div>
+        <button class="btn" onclick="copyUrl('u3', this)">Copy Notion Embed Link</button>
+      </div>
+
+      <div class="card">
+        <div>
+          <h3>☀️ 5-Minute Break Timer (Clean Light Mode)</h3>
+          <p style="font-size: 13px; color: var(--muted); margin: 6px 0 12px;">
+            Designed for light-themed Notion pages and classroom Google Sites.
+          </p>
+          <div class="url-box" id="u4">https://timerbox.net/embed?m=5&amp;mode=disc&amp;color=8b5cf6&amp;theme=light</div>
+        </div>
+        <button class="btn" onclick="copyUrl('u4', this)">Copy Notion Embed Link</button>
+      </div>
+    </div>
+
+    <p style="margin-top: 20px; font-size: 14px; color: var(--muted);">
+      Need a custom duration, title, or color? Open the interactive
+      <a href="https://timerbox.net/tools/embed-timer"><strong>Free Timer Widget Builder</strong></a>.
+    </p>
+
+    <!-- Direct Standalone Web Apps Directory (High-Value Deep Links) -->
+    <h2>Full-Screen Standalone Timers &amp; Classroom Tools</h2>
+    <p style="color: var(--muted); font-size: 14.5px;">
+      Launch any dedicated full-screen timer with Picture-in-Picture floating mode, brown noise, and smartboard projection:
+    </p>
+
+    <table class="resource-table">
+      <thead>
+        <tr>
+          <th>Tool / Timer Category</th>
+          <th>Direct Web App Link</th>
+          <th>Best For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Online Pomodoro &amp; Timeboxing Workspace</strong></td>
+          <td><a href="https://timerbox.net">timerbox.net</a></td>
+          <td>Task estimates, intervals &amp; ambient rain/brown noise</td>
+        </tr>
+        <tr>
+          <td><strong>Online Visual Timer (Shrinking Disc)</strong></td>
+          <td><a href="https://timerbox.net/visual-timer">Visual Countdown Timer</a></td>
+          <td>ADHD time blindness, kids &amp; visual learners</td>
+        </tr>
+        <tr>
+          <td><strong>ADHD Focus &amp; Sensory Timer</strong></td>
+          <td><a href="https://timerbox.net/adhd-timer">ADHD Focus Timer</a></td>
+          <td>Low-stimulation focus &amp; executive function</td>
+        </tr>
+        <tr>
+          <td><strong>Interactive Bomb Countdown Timer</strong></td>
+          <td><a href="https://timerbox.net/timers/bomb-timer">Bomb Countdown Timer</a></td>
+          <td>High-energy classroom games, quizzes &amp; warmups</td>
+        </tr>
+        <tr>
+          <td><strong>Interactive Teaching Clock</strong></td>
+          <td><a href="https://timerbox.net/tools/teaching-clock">Interactive Teaching Clock</a></td>
+          <td>Movable hour/minute hands for elementary teachers</td>
+        </tr>
+        <tr>
+          <td><strong>Classroom Noise Level Meter</strong></td>
+          <td><a href="https://timerbox.net/tools/classroom-noise-meter">Classroom Noise Meter</a></td>
+          <td>Real-time microphone decibel visualizer for teachers</td>
+        </tr>
+        <tr>
+          <td><strong>Popular Minute Countdowns</strong></td>
+          <td>
+            <a href="https://timerbox.net/timer/5-minute-timer">5 Min</a> &bull;
+            <a href="https://timerbox.net/timer/10-minute-timer">10 Min</a> &bull;
+            <a href="https://timerbox.net/timer/15-minute-timer">15 Min</a> &bull;
+            <a href="https://timerbox.net/timer/20-minute-timer">20 Min</a> &bull;
+            <a href="https://timerbox.net/timer/25-minute-timer">25 Min</a> &bull;
+            <a href="https://timerbox.net/timer/30-minute-timer">30 Min</a>
+          </td>
+          <td>Instant single-click countdowns with loud alarm chime</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function copyUrl(id, btn) {
+      var text = document.getElementById(id).textContent.trim();
+      navigator.clipboard.writeText(text);
+      var old = btn.textContent;
+      btn.textContent = 'Copied to Clipboard!';
+      setTimeout(function () { btn.textContent = old; }, 2000);
+    }
+  </script>
+</body>
+</html>
