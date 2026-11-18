@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Embeddable Timer Widget – Powered by TimerBox</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.12);
+      --accent: #10b981;
+    }
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: rgba(15, 23, 42, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      padding: 16px;
+      user-select: none;
+    }
+    .widget {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      max-width: 320px;
+    }
+    .title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+    }
+    .disc-wrap {
+      position: relative;
+      width: 170px;
+      height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    svg.disc {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    .digital-readout {
+      font-size: 3rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .disc-time {
+      position: absolute;
+      font-size: 1.55rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+    }
+    [data-theme="light"] .disc-time {
+      text-shadow: 0 1px 4px rgba(255, 255, 255, 0.7);
+    }
+    .controls {
+      display: flex;
+      gap: 8px;
+    }
+    button {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: opacity 0.15s, background 0.15s;
+    }
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+    button:hover { opacity: 0.9; }
+    .credit {
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      margin-top: 2px;
+    }
+    .credit:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="widget">
+    <div class="title" id="titleEl">Focus Timer</div>
+
+    <div class="disc-wrap" id="discView">
+      <svg class="disc" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-opacity="0.1" stroke-width="10" />
+        <circle id="progressRing" cx="50" cy="50" r="45" fill="none" stroke="var(--accent)" stroke-width="10"
+          stroke-dasharray="282.74" stroke-dashoffset="0" stroke-linecap="round" />
+      </svg>
+      <div class="disc-time" id="discTime">25:00</div>
+    </div>
+
+    <div class="digital-readout" id="digitalView" style="display:none;">25:00</div>
+
+    <div class="controls">
+      <button class="primary" id="startBtn">Start</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+
+    <a class="credit" href="https://timerbox.net/tools/embed-timer" target="_blank" rel="noopener">
+      Powered by TimerBox
+    </a>
+  </div>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var mins = Math.max(1, Math.min(180, parseInt(params.get('m') || '25', 10)));
+      var secs = Math.max(0, Math.min(59, parseInt(params.get('s') || '0', 10)));
+      var mode = (params.get('mode') || 'disc').toLowerCase();
+      var color = (params.get('color') || '10b981').replace(/[^0-9a-fA-F]/g, '');
+      var theme = (params.get('theme') || 'dark').toLowerCase();
+      var sound = params.get('sound') !== 'false';
+      var title = params.get('title') || (mins + ' Min Timer');
+
+      if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+      if (color.length === 6) document.documentElement.style.setProperty('--accent', '#' + color);
+
+      var titleEl = document.getElementById('titleEl');
+      var discView = document.getElementById('discView');
+      var digitalView = document.getElementById('digitalView');
+      var discTime = document.getElementById('discTime');
+      var progressRing = document.getElementById('progressRing');
+      var startBtn = document.getElementById('startBtn');
+      var resetBtn = document.getElementById('resetBtn');
+
+      titleEl.textContent = title;
+      if (mode === 'digital') {
+        discView.style.display = 'none';
+        digitalView.style.display = 'block';
+      }
+
+      var totalSeconds = mins * 60 + secs;
+      var remaining = totalSeconds;
+      var timerId = null;
+      var endTime = null;
+      var circumference = 2 * Math.PI * 45;
+
+      function format(sec) {
+        var m = Math.floor(sec / 60);
+        var s = sec % 60;
+        return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+      }
+
+      function render() {
+        var text = format(remaining);
+        discTime.textContent = text;
+        digitalView.textContent = text;
+        var fraction = totalSeconds > 0 ? remaining / totalSeconds : 0;
+        progressRing.style.strokeDashoffset = String(circumference * (1 - fraction));
+      }
+
+      function playChime() {
+        if (!sound) return;
+        try {
+          var ctx = new (window.AudioContext || window.webkitAudioContext)();
+          [523.25, 659.25, 783.99].forEach(function (freq, i) {
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0.15, ctx.currentTime + i * 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.45);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(ctx.currentTime + i * 0.15);
+            osc.stop(ctx.currentTime + i * 0.15 + 0.45);
+          });
+        } catch (e) {}
+      }
+
+      function tick() {
+        var left = Math.max(0, Math.round((endTime - Date.now()) / 1000));
+        remaining = left;
+        render();
+        if (left <= 0) {
+          clearInterval(timerId);
+          timerId = null;
+          startBtn.textContent = 'Start';
+          playChime();
+        }
+      }
+
+      startBtn.addEventListener('click', function () {
+        if (timerId) {
+          clearInterval(timerId);
+          timerId = null;
+          startBtn.textContent = 'Resume';
+        } else {
+          if (remaining <= 0) remaining = totalSeconds;
+          endTime = Date.now() + remaining * 1000;
+          timerId = setInterval(tick, 250);
+          startBtn.textContent = 'Pause';
+        }
+      });
+
+      resetBtn.addEventListener('click', function () {
+        if (timerId) {
+          clearInterval(timerId);
+          timerId = null;
+        }
+        remaining = totalSeconds;
+        startBtn.textContent = 'Start';
+        render();
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

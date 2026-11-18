@@ -33,6 +33,10 @@ You can customize any `https://timerbox.net/embed` URL using query parameters:
 * `sound` — `true` (chime on completion) or `false` (silent)
 * `title` — Custom header label (e.g., `title=Reading+Sprint`)
 
+### Self-Hosted / Open-Source Widget (`widget.html`)
+
+This repository also includes a standalone, zero-dependency open-source widget implementation in [`widget.html`](./widget.html) supporting the exact same URL query parameters (e.g., `widget.html?m=25&mode=disc&color=10b981&theme=dark`).
+
 ---
 
 ## 🏫 Direct Standalone Timers & Classroom Tools
